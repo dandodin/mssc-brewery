@@ -24,6 +24,12 @@ public class BeerServiceImpl implements BeerService {
                 .id(UUID.randomUUID())
                 .beerName(beerDto.getBeerName())
                 .beerStyle(beerDto.getBeerStyle())
+                .upc(beerDto.getUpc())
                 .build();
+    }
+
+    @Override
+    public void updateBeer(UUID beerId, BeerDto beerDto) {
+
     }
 }
