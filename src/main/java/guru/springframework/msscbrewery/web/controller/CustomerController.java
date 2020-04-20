@@ -2,26 +2,23 @@ package guru.springframework.msscbrewery.web.controller;
 
 import guru.springframework.msscbrewery.services.CustomerService;
 import guru.springframework.msscbrewery.web.model.CustomerDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
+@Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/customer")
 @RestController
 public class CustomerController {
 
-    private CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    private final CustomerService customerService;
 
     @GetMapping("/{customerId}")
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable("customerId") UUID customerId) {
@@ -49,14 +46,5 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCustomer(@PathVariable("customerId") UUID customerId) {
         customerService.deleteCustomerById(customerId);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<List> validationErrorHandling(ConstraintViolationException cve) {
-        List<String> errors = new ArrayList<>(cve.getConstraintViolations().size());
-        cve.getConstraintViolations().forEach(cv -> {
-            errors.add(cv.getPropertyPath() + " : " + cv.getMessage());
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }
